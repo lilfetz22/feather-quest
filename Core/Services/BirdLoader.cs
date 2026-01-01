@@ -5,7 +5,7 @@ namespace FeatherQuest.Core.Services;
 
 public class BirdLoader
 {
-    private Dictionary<string, BirdDefinition> _birdDatabase = new Dictionary<string, BirdDefinition>();
+    private readonly Dictionary<string, BirdDefinition> _birdDatabase = new Dictionary<string, BirdDefinition>();
 
     public Dictionary<string, BirdDefinition> LoadFromJson(string jsonContent)
     {
