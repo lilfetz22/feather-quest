@@ -35,3 +35,4 @@ bld/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+issue_creation.md
