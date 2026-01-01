@@ -42,7 +42,7 @@ public class BirdLoader
             _birdDatabase[bird.ID] = bird;
         }
 
-        return _birdDatabase;
+        return new Dictionary<string, BirdDefinition>(_birdDatabase);
     }
 
     /// <summary>

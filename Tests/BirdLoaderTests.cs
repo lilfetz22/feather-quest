@@ -130,4 +130,27 @@ public class BirdLoaderTests
         
         Assert.That(db, Is.InstanceOf<IReadOnlyDictionary<string, BirdDefinition>>());
     }
+
+    [Test]
+    public void LoadFromJson_ReturnedDictionaryDoesNotAffectInternalState()
+    {
+        var json = File.ReadAllText("TestData/birds.json");
+        var loader = new BirdLoader();
+        var db = loader.LoadFromJson(json);
+        
+        // Verify we can still get the bird
+        var robin = loader.Get("robin");
+        Assert.That(robin, Is.Not.Null);
+        
+        // Try to modify the returned dictionary (if it's actually mutable)
+        if (db is Dictionary<string, BirdDefinition> mutableDict)
+        {
+            mutableDict.Clear();
+        }
+        
+        // Internal state should be unaffected - we should still be able to get the bird
+        var robinAfter = loader.Get("robin");
+        Assert.That(robinAfter, Is.Not.Null);
+        Assert.That(robinAfter.CommonName, Is.EqualTo("American Robin"));
+    }
 }
