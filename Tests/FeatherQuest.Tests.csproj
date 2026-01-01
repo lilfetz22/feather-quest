@@ -24,4 +24,10 @@
     <ProjectReference Include="..\Core\FeatherQuest.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestData\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
