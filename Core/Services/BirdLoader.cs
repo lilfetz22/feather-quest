@@ -7,8 +7,22 @@ public class BirdLoader
 {
     private readonly Dictionary<string, BirdDefinition> _birdDatabase = new Dictionary<string, BirdDefinition>();
 
-    public Dictionary<string, BirdDefinition> LoadFromJson(string jsonContent)
+    /// <summary>
+    /// Parses JSON content and loads bird definitions into the database.
+    /// This method is not thread-safe and should be called from a single thread.
+    /// </summary>
+    /// <param name="jsonContent">The JSON string containing bird definitions.</param>
+    /// <returns>A read-only dictionary of bird definitions keyed by bird ID.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when jsonContent is null or empty.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when JSON parsing fails.</exception>
+    /// <exception cref="JsonException">Thrown when JSON is malformed.</exception>
+    public IReadOnlyDictionary<string, BirdDefinition> LoadFromJson(string jsonContent)
     {
+        if (string.IsNullOrEmpty(jsonContent))
+        {
+            throw new ArgumentNullException(nameof(jsonContent), "JSON content cannot be null or empty");
+        }
+
         var options = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
@@ -31,6 +45,12 @@ public class BirdLoader
         return _birdDatabase;
     }
 
+    /// <summary>
+    /// Retrieves a bird definition by its ID.
+    /// </summary>
+    /// <param name="birdId">The unique identifier of the bird.</param>
+    /// <returns>The bird definition matching the specified ID.</returns>
+    /// <exception cref="KeyNotFoundException">Thrown when no bird with the specified ID exists in the database.</exception>
     public BirdDefinition Get(string birdId)
     {
         if (_birdDatabase.TryGetValue(birdId, out var bird))
@@ -42,6 +62,6 @@ public class BirdLoader
 
     private class BirdData
     {
-        public List<BirdDefinition> Birds { get; set; } = new List<BirdDefinition>();
+        public List<BirdDefinition>? Birds { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 using FeatherQuest.Core.Services;
 using FeatherQuest.Core.Models;
+using System.Text.Json;
 
 namespace FeatherQuest.Tests;
 
@@ -10,7 +11,7 @@ public class BirdLoaderTests
     {
         var json = File.ReadAllText("TestData/birds.json");
         var loader = new BirdLoader();
-        var db = loader.LoadFromJson(json);
+        loader.LoadFromJson(json);
         var robin = loader.Get("robin");
         Assert.That(robin, Is.Not.Null);
         Assert.That(robin.CommonName, Is.EqualTo("American Robin"));
@@ -23,7 +24,7 @@ public class BirdLoaderTests
     {
         var json = File.ReadAllText("TestData/birds.json");
         var loader = new BirdLoader();
-        var db = loader.LoadFromJson(json);
+        loader.LoadFromJson(json);
         var robin = loader.Get("robin");
         
         Assert.That(robin.ID, Is.EqualTo("robin"));
@@ -41,7 +42,7 @@ public class BirdLoaderTests
     {
         var json = File.ReadAllText("TestData/birds.json");
         var loader = new BirdLoader();
-        var db = loader.LoadFromJson(json);
+        loader.LoadFromJson(json);
         var robin = loader.Get("robin");
         
         Assert.That(robin.Variants.Count, Is.EqualTo(1));
@@ -57,7 +58,7 @@ public class BirdLoaderTests
     {
         var json = File.ReadAllText("TestData/birds.json");
         var loader = new BirdLoader();
-        var db = loader.LoadFromJson(json);
+        loader.LoadFromJson(json);
         var robin = loader.Get("robin");
         
         Assert.That(robin.Calls.Count, Is.EqualTo(1));
@@ -87,5 +88,46 @@ public class BirdLoaderTests
         Assert.That(db, Is.Not.Null);
         Assert.That(db.Count, Is.EqualTo(1));
         Assert.That(db.ContainsKey("robin"), Is.True);
+    }
+
+    [Test]
+    public void LoadFromJson_ThrowsArgumentNullException_WhenJsonIsNull()
+    {
+        var loader = new BirdLoader();
+        Assert.Throws<ArgumentNullException>(() => loader.LoadFromJson(null!));
+    }
+
+    [Test]
+    public void LoadFromJson_ThrowsArgumentNullException_WhenJsonIsEmpty()
+    {
+        var loader = new BirdLoader();
+        Assert.Throws<ArgumentNullException>(() => loader.LoadFromJson(string.Empty));
+    }
+
+    [Test]
+    public void LoadFromJson_ThrowsJsonException_WhenJsonIsInvalid()
+    {
+        var loader = new BirdLoader();
+        var invalidJson = "{ this is not valid json }";
+        Assert.Throws<JsonException>(() => loader.LoadFromJson(invalidJson));
+    }
+
+    [Test]
+    public void LoadFromJson_ThrowsInvalidOperationException_WhenBirdsArrayIsMissing()
+    {
+        var loader = new BirdLoader();
+        var jsonWithoutBirds = "{ \"notBirds\": [] }";
+        var ex = Assert.Throws<InvalidOperationException>(() => loader.LoadFromJson(jsonWithoutBirds));
+        Assert.That(ex.Message, Does.Contain("Failed to parse bird data from JSON"));
+    }
+
+    [Test]
+    public void LoadFromJson_ReturnsReadOnlyDictionary()
+    {
+        var json = File.ReadAllText("TestData/birds.json");
+        var loader = new BirdLoader();
+        var db = loader.LoadFromJson(json);
+        
+        Assert.That(db, Is.InstanceOf<IReadOnlyDictionary<string, BirdDefinition>>());
     }
 }
