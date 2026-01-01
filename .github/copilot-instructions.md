@@ -4,3 +4,5 @@
 3. **Style:** Use C# Standard 2.1 features.
 4. **Testing:** All logic in `/Core` must be verifiable via NUnit/XUnit tests.
 5. **Forbidden:** Do not create .tscn files. Do not use `GD.Print` in `/Core`.
+6. **Windows CLI:** When executing CLI commands on Windows, always run `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` first.
+7. **Commits:** All commit messages must follow Conventional Commit format.
