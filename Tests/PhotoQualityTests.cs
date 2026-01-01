@@ -31,7 +31,7 @@ public class PhotoQualityTests
     [Test]
     public void CalculatePhotoQuality_OffCenterAndStable_ReturnsDegradedScore()
     {
-        // Position at (0.5, 0.5) = 45% from center
+        // Position at (0.5, 0.5) = approximately 50% from center
         var quality = FocusCalculator.CalculatePhotoQuality(
             new Vector2Simple(0.5f, 0.5f),
             stabilityAvg: 1.0f
