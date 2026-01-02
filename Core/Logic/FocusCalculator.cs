@@ -9,8 +9,9 @@ public static class FocusCalculator
 {
     /// <summary>
     /// Calculates the quality of a bird photograph based on reticle positioning and stability.
-    /// Quality is determined by the formula: quality = Clamp01((1 - normalizedDistance) * stabilityAvg)
-    /// where normalizedDistance is the distance from center normalized to 0-1 range.
+    /// Quality is determined by the formula: quality = Clamp01((1 - max(0, normalizedDistance - centerTolerance)) * stabilityAvg),
+    /// where normalizedDistance is the distance from center normalized to the 0-1 range and centerTolerance reduces the
+    /// effective distance (values within the tolerance are treated as perfect, and the adjustment is clamped at 0).
     /// </summary>
     /// <param name="finalReticlePos">Final reticle position when photo was taken (normalized coordinates, center = 0,0)</param>
     /// <param name="stabilityAvg">Average stability during the encounter (0.0 = completely unstable, 1.0 = perfectly stable)</param>
