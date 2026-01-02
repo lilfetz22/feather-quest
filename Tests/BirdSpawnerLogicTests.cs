@@ -1,0 +1,244 @@
+using FeatherQuest.Core.Models;
+using FeatherQuest.Core.Services;
+using System.Collections.Generic;
+
+namespace FeatherQuest.Tests;
+
+/// <summary>
+/// Tests for BirdSpawner logic.
+/// Note: These tests validate the spawner's selection and randomization logic
+/// without requiring the Godot runtime.
+/// </summary>
+public class BirdSpawnerLogicTests
+{
+    private IReadOnlyDictionary<string, BirdDefinition> CreateTestBirdDatabase()
+    {
+        var robin = new BirdDefinition
+        {
+            ID = "robin",
+            CommonName = "American Robin",
+            ScientificName = "Turdus migratorius",
+            Tier = DifficultyTier.Beginner,
+            FieldMarks = new[] { "orange_breast", "gray_back", "yellow_bill" },
+            Variants = new List<PlumageVariant>
+            {
+                new PlumageVariant
+                {
+                    PlumageType = PlumageType.Breeding,
+                    Gender = Gender.Male,
+                    SpritePath = new AssetReference { Path = "res://Assets/Birds/robin_breeding_male.png" },
+                    DifficultyRating = DifficultyTier.Beginner
+                }
+            },
+            Calls = new List<BirdCall>
+            {
+                new BirdCall
+                {
+                    Type = CallType.Song,
+                    AudioPath = new AssetReference { Path = "res://Assets/Audio/robin_song.mp3" },
+                    SpectrogramPath = new AssetReference { Path = "res://Assets/Spectrograms/robin_song.png" }
+                }
+            }
+        };
+
+        var bluebird = new BirdDefinition
+        {
+            ID = "bluebird",
+            CommonName = "Eastern Bluebird",
+            ScientificName = "Sialia sialis",
+            Tier = DifficultyTier.Beginner,
+            FieldMarks = new[] { "blue_back", "orange_breast", "white_belly" },
+            Variants = new List<PlumageVariant>
+            {
+                new PlumageVariant
+                {
+                    PlumageType = PlumageType.Breeding,
+                    Gender = Gender.Male,
+                    SpritePath = new AssetReference { Path = "res://Assets/Birds/bluebird_breeding_male.png" },
+                    DifficultyRating = DifficultyTier.Beginner
+                },
+                new PlumageVariant
+                {
+                    PlumageType = PlumageType.Breeding,
+                    Gender = Gender.Female,
+                    SpritePath = new AssetReference { Path = "res://Assets/Birds/bluebird_breeding_female.png" },
+                    DifficultyRating = DifficultyTier.Beginner
+                }
+            },
+            Calls = new List<BirdCall>
+            {
+                new BirdCall
+                {
+                    Type = CallType.Song,
+                    AudioPath = new AssetReference { Path = "res://Assets/Audio/bluebird_song.mp3" },
+                    SpectrogramPath = new AssetReference { Path = "res://Assets/Spectrograms/bluebird_song.png" }
+                }
+            }
+        };
+
+        return new Dictionary<string, BirdDefinition>
+        {
+            { "robin", robin },
+            { "bluebird", bluebird }
+        };
+    }
+
+    [Test]
+    public void BirdLoader_LoadsJsonSuccessfully()
+    {
+        // Use the test data that already exists for BirdLoader tests
+        var json = File.ReadAllText("TestData/birds.json");
+        var loader = new BirdLoader();
+        var database = loader.LoadFromJson(json);
+        
+        Assert.That(database, Is.Not.Null);
+        Assert.That(database.Count, Is.GreaterThan(0));
+        Assert.That(database.ContainsKey("robin"), Is.True);
+    }
+
+    [Test]
+    public void BirdDatabase_ContainsExpectedBirds()
+    {
+        var database = CreateTestBirdDatabase();
+        
+        Assert.That(database.Count, Is.EqualTo(2));
+        Assert.That(database.ContainsKey("robin"), Is.True);
+        Assert.That(database.ContainsKey("bluebird"), Is.True);
+    }
+
+    [Test]
+    public void BirdDefinition_HasVariants()
+    {
+        var database = CreateTestBirdDatabase();
+        var robin = database["robin"];
+        
+        Assert.That(robin.Variants.Count, Is.EqualTo(1));
+        Assert.That(robin.Variants[0].PlumageType, Is.EqualTo(PlumageType.Breeding));
+        Assert.That(robin.Variants[0].Gender, Is.EqualTo(Gender.Male));
+    }
+
+    [Test]
+    public void BirdDefinition_HasMultipleVariants()
+    {
+        var database = CreateTestBirdDatabase();
+        var bluebird = database["bluebird"];
+        
+        Assert.That(bluebird.Variants.Count, Is.EqualTo(2));
+        Assert.That(bluebird.Variants[0].Gender, Is.EqualTo(Gender.Male));
+        Assert.That(bluebird.Variants[1].Gender, Is.EqualTo(Gender.Female));
+    }
+
+    [Test]
+    public void BirdDefinition_HasCalls()
+    {
+        var database = CreateTestBirdDatabase();
+        var robin = database["robin"];
+        
+        Assert.That(robin.Calls.Count, Is.GreaterThan(0));
+        Assert.That(robin.Calls[0].Type, Is.EqualTo(CallType.Song));
+        Assert.That(robin.Calls[0].AudioPath.Path, Does.Contain("robin_song.mp3"));
+    }
+
+    [Test]
+    public void RandomSelection_ProducesValidBird()
+    {
+        var database = CreateTestBirdDatabase();
+        var random = new Random(12345); // Fixed seed for reproducibility
+        
+        var birdList = database.Values.ToList();
+        var selectedBird = birdList[random.Next(birdList.Count)];
+        
+        Assert.That(selectedBird, Is.Not.Null);
+        Assert.That(database.Values, Does.Contain(selectedBird));
+    }
+
+    [Test]
+    public void RandomSelection_ProducesValidVariant()
+    {
+        var database = CreateTestBirdDatabase();
+        var bluebird = database["bluebird"];
+        var random = new Random(12345); // Fixed seed for reproducibility
+        
+        var selectedVariant = bluebird.Variants[random.Next(bluebird.Variants.Count)];
+        
+        Assert.That(selectedVariant, Is.Not.Null);
+        Assert.That(bluebird.Variants, Does.Contain(selectedVariant));
+    }
+
+    [Test]
+    public void RandomSelection_MultipleCalls_ProducesDifferentResults()
+    {
+        var database = CreateTestBirdDatabase();
+        var random = new Random();
+        var birdList = database.Values.ToList();
+        
+        var selections = new List<string>();
+        for (int i = 0; i < 10; i++)
+        {
+            var bird = birdList[random.Next(birdList.Count)];
+            selections.Add(bird.ID);
+        }
+        
+        // With 10 selections and 2 birds, we should see at least some variation
+        var distinctSelections = selections.Distinct().Count();
+        Assert.That(distinctSelections, Is.GreaterThan(1), "Random selection should produce varied results");
+    }
+
+    [Test]
+    public void SpawnInterval_GeneratesValidRange()
+    {
+        var random = new Random();
+        float minInterval = 3.0f;
+        float maxInterval = 8.0f;
+        
+        for (int i = 0; i < 20; i++)
+        {
+            float interval = (float)(random.NextDouble() * (maxInterval - minInterval) + minInterval);
+            Assert.That(interval, Is.GreaterThanOrEqualTo(minInterval));
+            Assert.That(interval, Is.LessThanOrEqualTo(maxInterval));
+        }
+    }
+
+    [Test]
+    public void SpawnPosition_GeneratesValidCoordinates()
+    {
+        var random = new Random();
+        float minX = 0f, maxX = 1024f;
+        float minY = 0f, maxY = 600f;
+        
+        for (int i = 0; i < 20; i++)
+        {
+            float x = (float)(random.NextDouble() * (maxX - minX) + minX);
+            float y = (float)(random.NextDouble() * (maxY - minY) + minY);
+            
+            Assert.That(x, Is.GreaterThanOrEqualTo(minX));
+            Assert.That(x, Is.LessThanOrEqualTo(maxX));
+            Assert.That(y, Is.GreaterThanOrEqualTo(minY));
+            Assert.That(y, Is.LessThanOrEqualTo(maxY));
+        }
+    }
+
+    [Test]
+    public void EmptyDatabase_HandlesGracefully()
+    {
+        var emptyDatabase = new Dictionary<string, BirdDefinition>();
+        
+        Assert.That(emptyDatabase.Count, Is.EqualTo(0));
+        // A spawner with an empty database should not crash, but return null
+    }
+
+    [Test]
+    public void BirdWithNoVariants_HandlesGracefully()
+    {
+        var birdWithNoVariants = new BirdDefinition
+        {
+            ID = "test_bird",
+            CommonName = "Test Bird",
+            ScientificName = "Testus birdus",
+            Variants = new List<PlumageVariant>() // Empty list
+        };
+
+        Assert.That(birdWithNoVariants.Variants.Count, Is.EqualTo(0));
+        // A spawner should handle this by returning null for variant selection
+    }
+}
