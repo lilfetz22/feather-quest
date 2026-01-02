@@ -3,10 +3,10 @@ namespace FeatherQuest.Core.Models;
 /// <summary>
 /// A simple 2D vector structure for engine-agnostic coordinate representation.
 /// </summary>
-public struct Vector2Simple
+public readonly struct Vector2Simple
 {
-    public float X { get; set; }
-    public float Y { get; set; }
+    public float X { get; }
+    public float Y { get; }
 
     public Vector2Simple(float x, float y)
     {
