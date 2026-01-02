@@ -1,0 +1,32 @@
+{
+  "birds": [
+    {
+      "id": "robin",
+      "commonName": "American Robin",
+      "scientificName": "Turdus migratorius",
+      "tier": "Beginner",
+      "fieldMarks": ["orange_breast", "gray_back", "yellow_bill"],
+      "variants": [
+        {
+          "season": "Breeding",
+          "gender": "Male",
+          "spritePath": {
+            "path": "res://Assets/Birds/robin_breeding_male.png"
+          },
+          "difficultyRating": "Beginner"
+        }
+      ],
+      "calls": [
+        {
+          "type": "Song",
+          "audioPath": {
+            "path": "res://Assets/Audio/robin_song.mp3"
+          },
+          "spectrogramPath": {
+            "path": "res://Assets/Spectrograms/robin_song.png"
+          }
+        }
+      ]
+    }
+  ]
+}
