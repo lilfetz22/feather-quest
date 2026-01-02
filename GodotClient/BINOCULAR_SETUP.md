@@ -5,6 +5,9 @@ This guide explains how to set up the Binocular UI scene in Godot for the bird i
 
 ## Scene Structure
 
+You can create the scene in two ways:
+
+### Option 1: Manual Setup in Godot Editor
 Create a scene with the following node hierarchy:
 
 ```
@@ -16,6 +19,14 @@ Main (Node)
     └── Reticle (Control)
         └── ReticleSprite (TextureRect)
 ```
+
+### Option 2: Programmatic Setup
+Use the `BinocularSceneBuilder.cs` script to create the scene programmatically:
+1. Create a new scene with a Node named "Main"
+2. Attach the `Scripts/BinocularSceneBuilder.cs` script to the Main node
+3. Run the scene - it will build the binocular UI automatically
+
+See `Scripts/BinocularSceneBuilder.cs` for the implementation details.
 
 ## Node Configuration
 
