@@ -213,4 +213,22 @@ public class PhotoQualityTests
         // With tolerance, the score should be better
         Assert.That(qualityWithTolerance, Is.GreaterThan(qualityNoTolerance));
     }
+
+    [Test]
+    public void CalculatePhotoQuality_NegativeCoordinates_WorksCorrectly()
+    {
+        // Test that negative coordinates work correctly (all quadrants)
+        var qualityNegativeQuadrant = FocusCalculator.CalculatePhotoQuality(
+            new Vector2Simple(-0.5f, -0.5f),
+            stabilityAvg: 1.0f
+        );
+
+        var qualityPositiveQuadrant = FocusCalculator.CalculatePhotoQuality(
+            new Vector2Simple(0.5f, 0.5f),
+            stabilityAvg: 1.0f
+        );
+
+        // Distance from center should be the same for both quadrants
+        Assert.That(qualityNegativeQuadrant, Is.EqualTo(qualityPositiveQuadrant).Within(0.01f));
+    }
 }
