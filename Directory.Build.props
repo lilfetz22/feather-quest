@@ -1,0 +1,9 @@
+<Project>
+  <PropertyGroup>
+    <Version>0.0.1</Version>
+    <Authors>Feather Quest Team</Authors>
+    <Product>Feather Quest: My Wild Year</Product>
+    <Copyright>Copyright © 2026</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+</Project>

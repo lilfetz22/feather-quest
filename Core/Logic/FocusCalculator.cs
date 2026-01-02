@@ -4,7 +4,7 @@ using System;
 namespace FeatherQuest.Core.Logic;
 
 /// <summary>
-/// Pure math calculator for binocular focus and photo quality mechanics.
+/// Pure math calculator for binocular focus, sway mechanics, and photo quality scoring.
 /// All methods are stateless and engine-agnostic (no Godot or Unity dependencies).
 /// </summary>
 public static class FocusCalculator

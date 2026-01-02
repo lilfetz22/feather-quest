@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<coverage line-rate="1" branch-rate="1" version="1.9" timestamp="1767272522" lines-covered="13" lines-valid="13" branches-covered="0" branches-valid="0">
+  <sources>
+    <source>/home/runner/work/feather-quest/feather-quest/Core/</source>
+  </sources>
+  <packages>
+    <package name="FeatherQuest.Core" line-rate="1" branch-rate="1" complexity="2">
+      <classes>
+        <class name="FeatherQuest.Core.Models.Vector2Simple" filename="Models/Vector2Simple.cs" line-rate="1" branch-rate="1" complexity="1">
+          <methods>
+            <method name=".ctor" signature="(System.Single,System.Single)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="25" hits="19" branch="False" />
+                <line number="26" hits="19" branch="False" />
+                <line number="27" hits="19" branch="False" />
+                <line number="28" hits="19" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="25" hits="19" branch="False" />
+            <line number="26" hits="19" branch="False" />
+            <line number="27" hits="19" branch="False" />
+            <line number="28" hits="19" branch="False" />
+          </lines>
+        </class>
+        <class name="FeatherQuest.Core.Logic.FocusCalculator" filename="Logic/FocusCalculator.cs" line-rate="1" branch-rate="1" complexity="1">
+          <methods>
+            <method name="CalculateSway" signature="(System.Single,System.Single,System.Single)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="22" hits="19" branch="False" />
+                <line number="24" hits="19" branch="False" />
+                <line number="27" hits="19" branch="False" />
+                <line number="31" hits="19" branch="False" />
+                <line number="32" hits="19" branch="False" />
+                <line number="36" hits="19" branch="False" />
+                <line number="37" hits="19" branch="False" />
+                <line number="39" hits="19" branch="False" />
+                <line number="40" hits="19" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="22" hits="19" branch="False" />
+            <line number="24" hits="19" branch="False" />
+            <line number="27" hits="19" branch="False" />
+            <line number="31" hits="19" branch="False" />
+            <line number="32" hits="19" branch="False" />
+            <line number="36" hits="19" branch="False" />
+            <line number="37" hits="19" branch="False" />
+            <line number="39" hits="19" branch="False" />
+            <line number="40" hits="19" branch="False" />
+          </lines>
+        </class>
+      </classes>
+    </package>
+  </packages>
+</coverage>

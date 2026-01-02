@@ -1,0 +1,140 @@
+name: Semantic Versioning
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  version:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Determine version bump
+        id: version
+        shell: pwsh
+        run: |
+          # Get current version from Directory.Build.props
+          [xml]$props = Get-Content "Directory.Build.props"
+          $currentVersion = $props.Project.PropertyGroup.Version
+          Write-Host "Current version: $currentVersion"
+          
+          # Parse version
+          $versionParts = $currentVersion -split '\.'
+          $major = [int]$versionParts[0]
+          $minor = [int]$versionParts[1]
+          $patch = [int]$versionParts[2]
+          
+          # Get the last commit message
+          $commitMessage = git log -1 --pretty=%B
+          Write-Host "Commit message: $commitMessage"
+          
+          # Determine version bump based on conventional commits
+          if ($commitMessage -match '^(feat|feature)(\(.+\))?!:|^BREAKING CHANGE:') {
+            $major++
+            $minor = 0
+            $patch = 0
+            $bumpType = "major"
+          }
+          elseif ($commitMessage -match '^(feat|feature)(\(.+\))?:') {
+            $minor++
+            $patch = 0
+            $bumpType = "minor"
+          }
+          elseif ($commitMessage -match '^(fix|bugfix|perf|refactor|docs|style|test|build|ci|chore)(\(.+\))?:') {
+            $patch++
+            $bumpType = "patch"
+          }
+          else {
+            Write-Host "No conventional commit detected, skipping version bump"
+            echo "skip=true" >> $env:GITHUB_OUTPUT
+            exit 0
+          }
+          
+          $newVersion = "$major.$minor.$patch"
+          Write-Host "New version: $newVersion (bump: $bumpType)"
+          
+          echo "new_version=$newVersion" >> $env:GITHUB_OUTPUT
+          echo "current_version=$currentVersion" >> $env:GITHUB_OUTPUT
+          echo "bump_type=$bumpType" >> $env:GITHUB_OUTPUT
+          echo "skip=false" >> $env:GITHUB_OUTPUT
+
+      - name: Update version in Directory.Build.props
+        if: steps.version.outputs.skip != 'true'
+        shell: pwsh
+        run: |
+          $newVersion = "${{ steps.version.outputs.new_version }}"
+          [xml]$props = Get-Content "Directory.Build.props"
+          $props.Project.PropertyGroup.Version = $newVersion
+          $props.Save("$PWD\Directory.Build.props")
+          Write-Host "Updated Directory.Build.props to version $newVersion"
+
+      - name: Update CHANGELOG
+        if: steps.version.outputs.skip != 'true'
+        shell: pwsh
+        run: |
+          $newVersion = "${{ steps.version.outputs.new_version }}"
+          $date = Get-Date -Format "yyyy-MM-dd"
+          
+          $changelog = Get-Content "CHANGELOG.md" -Raw
+          
+          # Replace [Unreleased] section with new version and create new [Unreleased] section
+          $unreleasedPattern = '## \[Unreleased\]'
+          $newEntry = "## [Unreleased]`n`n## [$newVersion] - $date"
+          
+          $changelog = $changelog -replace $unreleasedPattern, $newEntry
+          
+          Set-Content "CHANGELOG.md" $changelog -NoNewline
+          Write-Host "Updated CHANGELOG.md with version $newVersion"
+
+      - name: Commit and tag
+        if: steps.version.outputs.skip != 'true'
+        shell: pwsh
+        run: |
+          $newVersion = "${{ steps.version.outputs.new_version }}"
+          
+          git add Directory.Build.props CHANGELOG.md
+          git commit -m "chore: bump version to $newVersion [skip ci]"
+          git tag -a "v$newVersion" -m "Release v$newVersion"
+          git push origin main
+          git push origin "v$newVersion"
+          
+          Write-Host "Created and pushed tag v$newVersion"
+
+      - name: Create GitHub Release
+        if: steps.version.outputs.skip != 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.version.outputs.new_version }}
+          release_name: Release v${{ steps.version.outputs.new_version }}
+          body: |
+            ## Changes in v${{ steps.version.outputs.new_version }}
+            
+            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
+          draft: false
+          prerelease: true
