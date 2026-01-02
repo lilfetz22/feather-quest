@@ -149,11 +149,11 @@ public class PhotoQualityTests
         // Test scores that should fall in Silver tier (0.4 - 0.7)
         // Moderate distance with perfect stability
         var quality = FocusCalculator.CalculatePhotoQuality(
-            new Vector2Simple(0.3f, 0.3f),
+            new Vector2Simple(0.4f, 0.4f),
             stabilityAvg: 1.0f
         );
-        Assert.That(quality, Is.GreaterThanOrEqualTo(0.4f));
-        Assert.That(quality, Is.LessThanOrEqualTo(0.7f));
+        Assert.That(quality, Is.GreaterThan(0.4f));
+        Assert.That(quality, Is.LessThan(0.7f));
     }
 
     [Test]
