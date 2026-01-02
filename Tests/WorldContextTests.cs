@@ -1,4 +1,5 @@
 using FeatherQuest.Core.Models;
+using System;
 using System.Text.Json;
 
 namespace FeatherQuest.Tests;
