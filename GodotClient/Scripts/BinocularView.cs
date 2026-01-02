@@ -20,7 +20,6 @@ public partial class BinocularView : CanvasLayer
 	private bool _isActive = false;
 	private float _elapsedTime = 0f;
 	private Vector2 _mouseOffset = Vector2.Zero;
-	private Vector2 _lastMousePosition = Vector2.Zero;
 	
 	// Configuration
 	[Export] public float Stability { get; set; } = 0.5f;
@@ -91,7 +90,6 @@ public partial class BinocularView : CanvasLayer
 		_isActive = true;
 		_elapsedTime = 0f;
 		_mouseOffset = Vector2.Zero;
-		_lastMousePosition = GetViewport().GetMousePosition();
 		
 		// Set bird sprite if provided
 		if (birdTexture != null && _birdSprite != null)

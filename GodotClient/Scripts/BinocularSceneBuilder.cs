@@ -36,7 +36,7 @@ public partial class BinocularSceneBuilder : Node
 			Texture = GD.Load<Texture2D>("res://Assets/Textures/binocular_mask.svg")
 		};
 		// Set mask to cover entire screen
-		mask.AnchorsPreset = (int)Control.LayoutPreset.FullRect;
+		mask.SetAnchorsPreset(Control.LayoutPreset.FullRect);
 		mask.GrowHorizontal = Control.GrowDirection.Both;
 		mask.GrowVertical = Control.GrowDirection.Both;
 		binocularView.AddChild(mask);
@@ -46,7 +46,7 @@ public partial class BinocularSceneBuilder : Node
 		{
 			Name = "BirdContainer"
 		};
-		birdContainer.AnchorsPreset = (int)Control.LayoutPreset.Center;
+		birdContainer.SetAnchorsPreset(Control.LayoutPreset.Center);
 		birdContainer.Size = new Vector2(400, 400);
 		birdContainer.Position = new Vector2(0, 0);
 		binocularView.AddChild(birdContainer);
@@ -57,7 +57,7 @@ public partial class BinocularSceneBuilder : Node
 			Name = "BirdSprite",
 			Texture = GD.Load<Texture2D>("res://Assets/Textures/placeholder_bird.svg")
 		};
-		birdSprite.AnchorsPreset = (int)Control.LayoutPreset.Center;
+		birdSprite.SetAnchorsPreset(Control.LayoutPreset.Center);
 		birdSprite.Size = new Vector2(200, 200);
 		birdSprite.Position = new Vector2(-100, -100); // Center it relative to parent
 		birdContainer.AddChild(birdSprite);
@@ -67,7 +67,7 @@ public partial class BinocularSceneBuilder : Node
 		{
 			Name = "Reticle"
 		};
-		reticle.AnchorsPreset = (int)Control.LayoutPreset.Center;
+		reticle.SetAnchorsPreset(Control.LayoutPreset.Center);
 		reticle.Size = new Vector2(100, 100);
 		reticle.Position = new Vector2(0, 0);
 		binocularView.AddChild(reticle);
@@ -78,7 +78,7 @@ public partial class BinocularSceneBuilder : Node
 			Name = "ReticleSprite",
 			Texture = GD.Load<Texture2D>("res://Assets/Textures/reticle.svg")
 		};
-		reticleSprite.AnchorsPreset = (int)Control.LayoutPreset.Center;
+		reticleSprite.SetAnchorsPreset(Control.LayoutPreset.Center);
 		reticleSprite.Size = new Vector2(100, 100);
 		reticleSprite.Position = new Vector2(-50, -50); // Center it relative to parent
 		reticle.AddChild(reticleSprite);
