@@ -1,5 +1,5 @@
 using FeatherQuest.Core.Models;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace FeatherQuest.Tests;
 
