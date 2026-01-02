@@ -1,6 +1,8 @@
 using FeatherQuest.Core.Models;
 using FeatherQuest.Core.Services;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace FeatherQuest.Tests;
 
