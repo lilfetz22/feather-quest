@@ -1,4 +1,5 @@
 using FeatherQuest.Core.Models;
+using System;
 using System.Text.Json;
 
 namespace FeatherQuest.Tests;
@@ -208,8 +209,8 @@ public class WorldContextTests
         };
 
         // Act
-        string json = JsonConvert.SerializeObject(context);
-        var deserialized = JsonConvert.DeserializeObject<WorldContext>(json);
+        string json = JsonSerializer.Serialize(context);
+        var deserialized = JsonSerializer.Deserialize<WorldContext>(json);
 
         // Assert
         Assert.That(deserialized, Is.Not.Null);
@@ -234,8 +235,8 @@ public class WorldContextTests
         };
 
         // Act
-        string json = JsonConvert.SerializeObject(context);
-        var deserialized = JsonConvert.DeserializeObject<WorldContext>(json);
+        string json = JsonSerializer.Serialize(context);
+        var deserialized = JsonSerializer.Deserialize<WorldContext>(json);
 
         // Assert
         Assert.That(deserialized, Is.Not.Null);

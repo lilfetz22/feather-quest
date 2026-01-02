@@ -1,6 +1,9 @@
 namespace FeatherQuest.Core.Models;
 
-public enum Season
+/// <summary>
+/// Plumage variant type based on breeding cycle and age.
+/// </summary>
+public enum PlumageType
 {
     Breeding,
     NonBreeding,

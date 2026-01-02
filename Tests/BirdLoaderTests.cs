@@ -47,7 +47,7 @@ public class BirdLoaderTests
         
         Assert.That(robin.Variants.Count, Is.EqualTo(1));
         var variant = robin.Variants[0];
-        Assert.That(variant.Season, Is.EqualTo(Season.Breeding));
+        Assert.That(variant.PlumageType, Is.EqualTo(PlumageType.Breeding));
         Assert.That(variant.Gender, Is.EqualTo(Gender.Male));
         Assert.That(variant.SpritePath.Path, Is.EqualTo("res://Assets/Birds/robin_breeding_male.png"));
         Assert.That(variant.DifficultyRating, Is.EqualTo(DifficultyTier.Beginner));
