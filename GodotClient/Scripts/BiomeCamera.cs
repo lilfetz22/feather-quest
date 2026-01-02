@@ -14,10 +14,19 @@ public partial class BiomeCamera : Camera2D
     private bool _isDragging = false;
     private Vector2 _lastMousePosition = Vector2.Zero;
 
+    private void UpdateCameraPosition(Vector2 delta)
+    {
+        // Move camera in opposite direction of drag (natural scrolling)
+        Position = new Vector2(Position.X - delta.X * DragSensitivity, Position.Y);
+        
+        // Clamp camera position within bounds
+        Position = new Vector2(Mathf.Clamp(Position.X, MinX, MaxX), Position.Y);
+    }
+
     public override void _Ready()
     {
-        // Center the camera at the start
-        Position = new Vector2(GlobalPosition.X, GlobalPosition.Y);
+        // Initialize camera position
+        Position = GlobalPosition;
     }
 
     public override void _Input(InputEvent @event)
@@ -42,12 +51,7 @@ public partial class BiomeCamera : Camera2D
         {
             Vector2 delta = mouseMotion.Position - _lastMousePosition;
             _lastMousePosition = mouseMotion.Position;
-            
-            // Move camera in opposite direction of drag (natural scrolling)
-            Position = new Vector2(Position.X - delta.X * DragSensitivity, Position.Y);
-            
-            // Clamp camera position within bounds
-            Position = new Vector2(Mathf.Clamp(Position.X, MinX, MaxX), Position.Y);
+            UpdateCameraPosition(delta);
         }
 
         // Handle touch input
@@ -67,12 +71,7 @@ public partial class BiomeCamera : Camera2D
         {
             Vector2 delta = drag.Position - _lastMousePosition;
             _lastMousePosition = drag.Position;
-            
-            // Move camera in opposite direction of drag (natural scrolling)
-            Position = new Vector2(Position.X - delta.X * DragSensitivity, Position.Y);
-            
-            // Clamp camera position within bounds
-            Position = new Vector2(Mathf.Clamp(Position.X, MinX, MaxX), Position.Y);
+            UpdateCameraPosition(delta);
         }
     }
 }
