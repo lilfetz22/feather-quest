@@ -1,0 +1,77 @@
+{
+  "birds": [
+    {
+      "id": "robin",
+      "commonName": "American Robin",
+      "scientificName": "Turdus migratorius",
+      "tier": "Beginner",
+      "fieldMarks": ["orange_breast", "gray_back", "yellow_bill"],
+      "variants": [
+        {
+          "season": "Breeding",
+          "gender": "Male",
+          "spritePath": {
+            "path": "res://Assets/Birds/robin_breeding_male.png"
+          },
+          "difficultyRating": "Beginner"
+        }
+      ],
+      "calls": [
+        {
+          "type": "Song",
+          "audioPath": {
+            "path": "res://Assets/Audio/robin_song.mp3"
+          },
+          "spectrogramPath": {
+            "path": "res://Assets/Spectrograms/robin_song.png"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bluebird",
+      "commonName": "Eastern Bluebird",
+      "scientificName": "Sialia sialis",
+      "tier": "Beginner",
+      "fieldMarks": ["blue_back", "orange_breast", "white_belly"],
+      "variants": [
+        {
+          "season": "Breeding",
+          "gender": "Male",
+          "spritePath": {
+            "path": "res://Assets/Birds/bluebird_breeding_male.png"
+          },
+          "difficultyRating": "Beginner"
+        },
+        {
+          "season": "Breeding",
+          "gender": "Female",
+          "spritePath": {
+            "path": "res://Assets/Birds/bluebird_breeding_female.png"
+          },
+          "difficultyRating": "Beginner"
+        }
+      ],
+      "calls": [
+        {
+          "type": "Song",
+          "audioPath": {
+            "path": "res://Assets/Audio/bluebird_song.mp3"
+          },
+          "spectrogramPath": {
+            "path": "res://Assets/Spectrograms/bluebird_song.png"
+          }
+        },
+        {
+          "type": "Call",
+          "audioPath": {
+            "path": "res://Assets/Audio/bluebird_call.mp3"
+          },
+          "spectrogramPath": {
+            "path": "res://Assets/Spectrograms/bluebird_call.png"
+          }
+        }
+      ]
+    }
+  ]
+}
