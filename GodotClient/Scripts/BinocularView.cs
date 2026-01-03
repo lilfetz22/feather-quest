@@ -54,8 +54,11 @@ public partial class BinocularView : CanvasLayer
 		// The bird moves with sway, but player can counteract with mouse movement
 		Vector2 finalPosition = swayOffset - _mouseOffset;
 		
-		// Apply position to the bird container
-		_birdContainer.Position = finalPosition;
+		// Apply position to the bird container, if it has been initialized
+		if (_birdContainer != null)
+		{
+			_birdContainer.Position = finalPosition;
+		}
 	}
 	
 	public override void _Input(InputEvent @event)
