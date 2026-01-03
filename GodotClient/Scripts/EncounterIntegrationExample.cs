@@ -20,6 +20,11 @@ public partial class EncounterIntegrationExample : Node
 	{
 		_binocularView = GetNode<BinocularView>("BinocularView");
 		
+		if (_binocularView == null)
+		{
+			GD.PrintErr("BinocularView node not found! Ensure the scene has a BinocularView node.");
+		}
+		
 		// Example: Start an encounter when clicking on a bird cue
 		// In real game, this would be triggered by the spawn system
 	}
@@ -29,6 +34,9 @@ public partial class EncounterIntegrationExample : Node
 	/// </summary>
 	public void OnBirdCueClicked(Texture2D birdTexture)
 	{
+		if (_binocularView == null)
+			return;
+			
 		// Start the binocular encounter
 		_binocularView.StartEncounter(birdTexture);
 		_focusAccumulator = 0f;
@@ -39,7 +47,7 @@ public partial class EncounterIntegrationExample : Node
 	public override void _Process(double delta)
 	{
 		// Only track if binocular view is active
-		if (!_binocularView.Visible)
+		if (_binocularView == null || !_binocularView.Visible)
 			return;
 		
 		// Get the bird's current offset from center
@@ -145,6 +153,9 @@ public partial class EncounterIntegrationExample : Node
 	/// </summary>
 	public void OnBirdFlushed()
 	{
+		if (_binocularView == null)
+			return;
+			
 		_binocularView.EndEncounter();
 		GD.Print("Bird flushed! Encounter failed.");
 	}
@@ -158,6 +169,7 @@ public partial class EncounterIntegrationExample : Node
 		    && keyEvent.Pressed
 		    && !keyEvent.IsEcho()
 		    && keyEvent.Keycode == Key.Escape
+		    && _binocularView != null
 		    && _binocularView.Visible)
 		{
 			OnBirdFlushed();

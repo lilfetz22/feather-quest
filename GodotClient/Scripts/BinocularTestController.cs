@@ -9,12 +9,19 @@ namespace FeatherQuest.GodotClient.Scripts;
 /// </summary>
 public partial class BinocularTestController : Node
 {
+	[Export] public NodePath BinocularViewPath { get; set; } = new NodePath("BinocularView");
+	
 	private BinocularView _binocularView;
 	
 	public override void _Ready()
 	{
-		// Find the BinocularView in the scene
-		_binocularView = GetNode<BinocularView>("/root/Main/BinocularView");
+		// Find the BinocularView in the scene using the exported path
+		_binocularView = GetNodeOrNull<BinocularView>(BinocularViewPath);
+		
+		if (_binocularView == null)
+		{
+			GD.PrintErr($"BinocularView not found at path: {BinocularViewPath}. Press 'B' will not work.");
+		}
 	}
 	
 	public override void _Input(InputEvent @event)

@@ -29,11 +29,29 @@ public partial class BinocularSceneBuilder : Node
 		};
 		AddChild(binocularView);
 		
+		// Load textures with null checks
+		var maskTexture = GD.Load<Texture2D>("res://Assets/Textures/binocular_mask.svg");
+		var birdTexture = GD.Load<Texture2D>("res://Assets/Textures/placeholder_bird.svg");
+		var reticleTexture = GD.Load<Texture2D>("res://Assets/Textures/reticle.svg");
+		
+		if (maskTexture == null)
+		{
+			GD.PrintErr("Failed to load binocular mask texture. Check if the file exists at res://Assets/Textures/binocular_mask.svg");
+		}
+		if (birdTexture == null)
+		{
+			GD.PrintErr("Failed to load bird texture. Check if the file exists at res://Assets/Textures/placeholder_bird.svg");
+		}
+		if (reticleTexture == null)
+		{
+			GD.PrintErr("Failed to load reticle texture. Check if the file exists at res://Assets/Textures/reticle.svg");
+		}
+		
 		// Create the binocular mask (black overlay with circular cutouts)
 		var mask = new TextureRect
 		{
 			Name = "BinocularMask",
-			Texture = GD.Load<Texture2D>("res://Assets/Textures/binocular_mask.svg")
+			Texture = maskTexture
 		};
 		// Set mask to cover entire screen
 		mask.SetAnchorsPreset(Control.LayoutPreset.FullRect);
@@ -55,7 +73,7 @@ public partial class BinocularSceneBuilder : Node
 		var birdSprite = new TextureRect
 		{
 			Name = "BirdSprite",
-			Texture = GD.Load<Texture2D>("res://Assets/Textures/placeholder_bird.svg")
+			Texture = birdTexture
 		};
 		birdSprite.SetAnchorsPreset(Control.LayoutPreset.Center);
 		birdSprite.Size = new Vector2(200, 200);
@@ -76,7 +94,7 @@ public partial class BinocularSceneBuilder : Node
 		var reticleSprite = new TextureRect
 		{
 			Name = "ReticleSprite",
-			Texture = GD.Load<Texture2D>("res://Assets/Textures/reticle.svg")
+			Texture = reticleTexture
 		};
 		reticleSprite.SetAnchorsPreset(Control.LayoutPreset.Center);
 		reticleSprite.Size = new Vector2(100, 100);
