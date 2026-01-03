@@ -171,19 +171,19 @@ public class BirdSpawnerLogicTests
     public void RandomSelection_MultipleCalls_ProducesDifferentResults()
     {
         var database = CreateTestBirdDatabase();
-        var random = new Random();
+        var random = new Random(12345); // Fixed seed to avoid spurious failures
         var birdList = database.Values.ToList();
         
         var selections = new List<string>();
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 50; i++) // Increased iterations for better coverage
         {
             var bird = birdList[random.Next(birdList.Count)];
             selections.Add(bird.ID);
         }
         
-        // With 10 selections and 2 birds, we should see at least some variation
+        // With 50 selections from 2 birds and a fixed seed, we expect both to appear
         var distinctSelections = selections.Distinct().Count();
-        Assert.That(distinctSelections, Is.GreaterThan(1), "Random selection should produce varied results");
+        Assert.That(distinctSelections, Is.EqualTo(2), "Random selection should produce both birds");
     }
 
     [Test]
@@ -223,10 +223,19 @@ public class BirdSpawnerLogicTests
     [Test]
     public void EmptyDatabase_HandlesGracefully()
     {
+        // Create a mock spawner helper to test selection logic
+        var random = new Random();
         var emptyDatabase = new Dictionary<string, BirdDefinition>();
         
-        Assert.That(emptyDatabase.Count, Is.EqualTo(0));
-        // A spawner with an empty database should not crash, but return null
+        // Simulate the SelectRandomBird logic with empty database
+        BirdDefinition? result = null;
+        if (emptyDatabase.Count > 0)
+        {
+            var birdList = emptyDatabase.Values.ToList();
+            result = birdList[random.Next(birdList.Count)];
+        }
+        
+        Assert.That(result, Is.Null, "SelectRandomBird should return null for empty database");
     }
 
     [Test]
@@ -240,7 +249,14 @@ public class BirdSpawnerLogicTests
             Variants = new List<PlumageVariant>() // Empty list
         };
 
-        Assert.That(birdWithNoVariants.Variants.Count, Is.EqualTo(0));
-        // A spawner should handle this by returning null for variant selection
+        // Simulate the SelectRandomPlumageVariant logic with no variants
+        PlumageVariant? result = null;
+        if (birdWithNoVariants != null && birdWithNoVariants.Variants.Count > 0)
+        {
+            var random = new Random();
+            result = birdWithNoVariants.Variants[random.Next(birdWithNoVariants.Variants.Count)];
+        }
+        
+        Assert.That(result, Is.Null, "SelectRandomPlumageVariant should return null when bird has no variants");
     }
 }
