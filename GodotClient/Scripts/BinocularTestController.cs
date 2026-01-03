@@ -19,13 +19,10 @@ public partial class BinocularTestController : Node
 	
 	public override void _Input(InputEvent @event)
 	{
-		if (@event is InputEventKey keyEvent && keyEvent.Pressed && !keyEvent.IsEcho())
+		if (@event is InputEventKey keyEvent && keyEvent.Pressed && !keyEvent.IsEcho() && keyEvent.Keycode == Key.B)
 		{
 			// Press 'B' to toggle binoculars
-			if (keyEvent.Keycode == Key.B)
-			{
-				_binocularView?.Toggle();
-			}
+			_binocularView?.Toggle();
 		}
 	}
 }
