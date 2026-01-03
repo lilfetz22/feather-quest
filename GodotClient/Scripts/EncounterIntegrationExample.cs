@@ -12,7 +12,7 @@ public partial class EncounterIntegrationExample : Node
 {
 	private BinocularView _binocularView;
 	private float _focusAccumulator = 0f;
-	private float _focusRequirement = 100f;
+	private readonly float _focusRequirement = 100f;
 	private float _stabilityTracker = 0f;
 	private int _stabilityMeasurements = 0;
 	
