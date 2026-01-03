@@ -25,10 +25,8 @@ public partial class BiomeCamera : Camera2D
 
     public override void _Ready()
     {
-        // Initialize camera position
-        Position = GlobalPosition;
+        // Keep the camera position as configured in the scene; no explicit re-initialization needed.
     }
-
     public override void _Input(InputEvent @event)
     {
         // Handle mouse drag
