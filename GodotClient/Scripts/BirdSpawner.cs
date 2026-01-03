@@ -92,6 +92,34 @@ public partial class BirdSpawner : Node
         _spawnTimer.Start();
     }
 
+    public override void _ExitTree()
+    {
+        CleanupSpawnTimer();
+        base._ExitTree();
+    }
+
+    /// <summary>
+    /// Cleans up the spawn timer to avoid leaks and callbacks after this node leaves the tree.
+    /// </summary>
+    private void CleanupSpawnTimer()
+    {
+        if (_spawnTimer == null)
+        {
+            return;
+        }
+
+        _spawnTimer.Stop();
+        _spawnTimer.Timeout -= OnSpawnTimerTimeout;
+
+        if (_spawnTimer.GetParent() == this)
+        {
+            RemoveChild(_spawnTimer);
+        }
+
+        _spawnTimer.QueueFree();
+        _spawnTimer = null;
+    }
+
     /// <summary>
     /// Called when the spawn timer times out. Triggers a bird spawn.
     /// </summary>
