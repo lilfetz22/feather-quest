@@ -175,6 +175,10 @@ public partial class BirdSpawner : Node
         {
             var call = birdDefinition.Calls[_random.Next(birdDefinition.Calls.Count)];
             GD.Print($"  - Call type: {call.Type}, Audio: {call.AudioPath.Path}");
+            if (!string.IsNullOrEmpty(call.SpectrogramPath.Path))
+            {
+                GD.Print($"  - Spectrogram: {call.SpectrogramPath.Path}");
+            }
         }
     }
 

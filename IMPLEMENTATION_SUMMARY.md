@@ -98,7 +98,7 @@ Includes:
 ## Technical Decisions
 
 ### 1. Deferred BirdCue Scene Creation
-Following project guidelines: "Forbidden: Do not create .tscn files"
+BirdCue scene creation deferred to keep PR focused on core spawning logic
 - Scene instantiation code included but commented
 - Clear TODO comments for future implementation
 - Documentation explains integration process
