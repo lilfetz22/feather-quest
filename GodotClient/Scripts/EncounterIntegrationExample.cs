@@ -154,12 +154,13 @@ public partial class EncounterIntegrationExample : Node
 	/// </summary>
 	public override void _Input(InputEvent @event)
 	{
-		if (@event is InputEventKey keyEvent && keyEvent.Pressed && !keyEvent.IsEcho())
+		if (@event is InputEventKey keyEvent
+		    && keyEvent.Pressed
+		    && !keyEvent.IsEcho()
+		    && keyEvent.Keycode == Key.Escape
+		    && _binocularView.Visible)
 		{
-			if (keyEvent.Keycode == Key.Escape && _binocularView.Visible)
-			{
-				OnBirdFlushed();
-			}
+			OnBirdFlushed();
 		}
 	}
 }
