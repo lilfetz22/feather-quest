@@ -47,15 +47,16 @@ public partial class EncounterIntegrationExample : Node
 		
 		// Calculate how well-centered the bird is (0 = perfect, higher = worse)
 		float distanceFromCenter = offset.Magnitude();
+		float clampedDistanceFromCenter = Mathf.Clamp(distanceFromCenter, 0f, 1f);
 		
 		// Award focus based on centering
 		// The closer to center, the faster focus builds
-		float focusGain = (1.0f - distanceFromCenter) * (float)delta * 50f;
+		float focusGain = (1.0f - clampedDistanceFromCenter) * (float)delta * 50f;
 		_focusAccumulator += Mathf.Max(0, focusGain);
 		
 		// Track stability for photo quality calculation
 		// Lower offset = higher stability contribution
-		float currentStability = 1.0f - Mathf.Clamp(distanceFromCenter, 0f, 1f);
+		float currentStability = 1.0f - clampedDistanceFromCenter;
 		_stabilityTracker += currentStability;
 		_stabilityMeasurements++;
 		
