@@ -11,8 +11,10 @@ public partial class BiomeCamera : Camera2D
     [Export] public float MaxX = 5000f;
     [Export] public float DragSensitivity = 1.0f;
 
-    private bool _isDragging = false;
+    private bool _isMouseDragging = false;
+    private bool _isTouchDragging = false;
     private Vector2 _lastMousePosition = Vector2.Zero;
+    private Vector2 _lastTouchPosition = Vector2.Zero;
 
     private void UpdateCameraPosition(Vector2 delta)
     {
@@ -34,18 +36,18 @@ public partial class BiomeCamera : Camera2D
         {
             if (mouseButton.ButtonIndex == MouseButton.Left)
             {
-                if (mouseButton.Pressed)
+                if (mouseButton.Pressed && !_isTouchDragging)
                 {
-                    _isDragging = true;
+                    _isMouseDragging = true;
                     _lastMousePosition = mouseButton.Position;
                 }
                 else
                 {
-                    _isDragging = false;
+                    _isMouseDragging = false;
                 }
             }
         }
-        else if (@event is InputEventMouseMotion mouseMotion && _isDragging)
+        else if (@event is InputEventMouseMotion mouseMotion && _isMouseDragging)
         {
             Vector2 delta = mouseMotion.Position - _lastMousePosition;
             _lastMousePosition = mouseMotion.Position;
@@ -55,20 +57,20 @@ public partial class BiomeCamera : Camera2D
         // Handle touch input
         if (@event is InputEventScreenTouch touch)
         {
-            if (touch.Pressed)
+            if (touch.Pressed && !_isMouseDragging)
             {
-                _isDragging = true;
-                _lastMousePosition = touch.Position;
+                _isTouchDragging = true;
+                _lastTouchPosition = touch.Position;
             }
             else
             {
-                _isDragging = false;
+                _isTouchDragging = false;
             }
         }
-        else if (@event is InputEventScreenDrag drag)
+        else if (@event is InputEventScreenDrag drag && _isTouchDragging)
         {
-            Vector2 delta = drag.Position - _lastMousePosition;
-            _lastMousePosition = drag.Position;
+            Vector2 delta = drag.Position - _lastTouchPosition;
+            _lastTouchPosition = drag.Position;
             UpdateCameraPosition(delta);
         }
     }
