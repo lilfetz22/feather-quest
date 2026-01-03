@@ -1,7 +1,6 @@
 using Godot;
 using FeatherQuest.Core.Logic;
 using FeatherQuest.Core.Models;
-using System;
 
 namespace FeatherQuest.GodotClient.Scripts;
 
