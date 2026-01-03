@@ -113,7 +113,7 @@ Biome (Node2D)
 │   │
 │   └── ForegroundLayer (ParallaxLayer)
 │       └── ForegroundRect (ColorRect 1920x180)
-│           Color: RGB(34, 34, 68) - Darkest Green
+│           Color: RGB(34, 34, 68) - Dark Blue-Grey
 │           Motion: (1.0, 0) - FAST
 │           Position: Y=900 to 1080
 │
