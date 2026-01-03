@@ -181,9 +181,9 @@ public class BirdSpawnerLogicTests
             selections.Add(bird.ID);
         }
         
-        // With 50 selections from 2 birds and a fixed seed, we expect both to appear
+        // With 50 selections from 2 birds, we expect multiple selections of each
         var distinctSelections = selections.Distinct().Count();
-        Assert.That(distinctSelections, Is.EqualTo(2), "Random selection should produce both birds");
+        Assert.That(distinctSelections, Is.GreaterThan(1), "Random selection should produce varied results");
     }
 
     [Test]
@@ -223,15 +223,14 @@ public class BirdSpawnerLogicTests
     [Test]
     public void EmptyDatabase_HandlesGracefully()
     {
-        // Create a mock spawner helper to test selection logic
-        var random = new Random();
+        // Simulate the SelectRandomBird logic with empty database
         var emptyDatabase = new Dictionary<string, BirdDefinition>();
         
-        // Simulate the SelectRandomBird logic with empty database
         BirdDefinition? result = null;
         if (emptyDatabase.Count > 0)
         {
             var birdList = emptyDatabase.Values.ToList();
+            var random = new Random();
             result = birdList[random.Next(birdList.Count)];
         }
         
