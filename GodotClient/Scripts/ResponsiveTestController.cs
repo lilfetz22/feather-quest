@@ -1,5 +1,4 @@
 using Godot;
-using FeatherQuest.GodotClient.Scripts;
 
 namespace FeatherQuest.GodotClient.Scripts;
 
