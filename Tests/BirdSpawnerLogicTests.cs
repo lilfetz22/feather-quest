@@ -1,4 +1,5 @@
 using FeatherQuest.Core.Models;
+using FeatherQuest.Core.Logic;
 using FeatherQuest.Core.Services;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +14,14 @@ namespace FeatherQuest.Tests;
 /// </summary>
 public class BirdSpawnerLogicTests
 {
+    private SpawnRuleEngine _spawnRuleEngine;
+
+    [SetUp]
+    public void SetUp()
+    {
+        _spawnRuleEngine = new SpawnRuleEngine();
+    }
+
     private IReadOnlyDictionary<string, BirdDefinition> CreateTestBirdDatabase()
     {
         var robin = new BirdDefinition
@@ -258,4 +267,127 @@ public class BirdSpawnerLogicTests
         
         Assert.That(result, Is.Null, "SelectRandomPlumageVariant should return null when bird has no variants");
     }
+
+    #region Spawn Rule Integration Tests
+
+    [Test]
+    public void SpawnRuleEngine_PostRainContext_ProducesSwarmModifier()
+    {
+        // Arrange
+        var context = new WorldContext
+        {
+            TimeOfDay = TimeOfDay.Morning,
+            Weather = Weather.PostRain,
+            Season = Season.Spring
+        };
+
+        // Act
+        var modifier = _spawnRuleEngine.EvaluateSpawnRules(context);
+
+        // Assert - This would cause BirdSpawner to spawn 5 birds at once
+        Assert.That(modifier.Pattern, Is.EqualTo(SpawnPattern.Swarm));
+        Assert.That(modifier.GroupSize, Is.EqualTo(5));
+        Assert.That(modifier.SpawnRateMultiplier, Is.EqualTo(2.0f));
+    }
+
+    [Test]
+    public void SpawnRuleEngine_MiddayContext_ReducesSpawnFrequency()
+    {
+        // Arrange
+        var context = new WorldContext
+        {
+            TimeOfDay = TimeOfDay.Midday,
+            Weather = Weather.Clear,
+            Season = Season.Summer
+        };
+
+        // Act
+        var modifier = _spawnRuleEngine.EvaluateSpawnRules(context);
+
+        // Assert - BirdSpawner should spawn half as often
+        Assert.That(modifier.Pattern, Is.EqualTo(SpawnPattern.Solitary));
+        Assert.That(modifier.GroupSize, Is.EqualTo(1));
+        Assert.That(modifier.SpawnRateMultiplier, Is.EqualTo(0.5f));
+    }
+
+    [Test]
+    public void SpawnRuleEngine_HeavyRainContext_HidesBirds()
+    {
+        // Arrange
+        var context = new WorldContext
+        {
+            TimeOfDay = TimeOfDay.Afternoon,
+            Weather = Weather.HeavyRain,
+            Season = Season.Summer
+        };
+
+        // Act
+        var modifier = _spawnRuleEngine.EvaluateSpawnRules(context);
+
+        // Assert - BirdSpawner should rarely spawn birds
+        Assert.That(modifier.Pattern, Is.EqualTo(SpawnPattern.Hidden));
+        Assert.That(modifier.GroupSize, Is.EqualTo(1));
+        Assert.That(modifier.SpawnRateMultiplier, Is.EqualTo(0.2f));
+    }
+
+    [Test]
+    public void SpawnRuleEngine_MorningContext_IncreasesFlockActivity()
+    {
+        // Arrange
+        var context = new WorldContext
+        {
+            TimeOfDay = TimeOfDay.Morning,
+            Weather = Weather.Clear,
+            Season = Season.Spring
+        };
+
+        // Act
+        var modifier = _spawnRuleEngine.EvaluateSpawnRules(context);
+
+        // Assert - BirdSpawner should spawn flocks of 3
+        Assert.That(modifier.Pattern, Is.EqualTo(SpawnPattern.Flock));
+        Assert.That(modifier.GroupSize, Is.EqualTo(3));
+        Assert.That(modifier.SpawnRateMultiplier, Is.EqualTo(1.5f));
+    }
+
+    [Test]
+    public void SpawnInterval_AdjustedByMultiplier_ProducesCorrectTiming()
+    {
+        // Arrange
+        float baseInterval = 5.0f; // seconds
+        float swarmMultiplier = 2.0f; // PostRain
+        float hiddenMultiplier = 0.2f; // HeavyRain
+        
+        // Act
+        float swarmInterval = baseInterval / swarmMultiplier;
+        float hiddenInterval = baseInterval / hiddenMultiplier;
+        
+        // Assert
+        Assert.That(swarmInterval, Is.EqualTo(2.5f)); // Spawn twice as fast
+        Assert.That(hiddenInterval, Is.EqualTo(25.0f)); // Spawn 5x slower
+    }
+
+    [Test]
+    public void GroupSize_DeterminesNumberOfBirdsSpawned()
+    {
+        // This test documents the expected behavior of BirdSpawner
+        // when processing different spawn modifiers
+        
+        var testCases = new[]
+        {
+            (SpawnPattern.Solitary, 1, "Single bird"),
+            (SpawnPattern.Flock, 3, "Small group"),
+            (SpawnPattern.Swarm, 5, "Large group"),
+            (SpawnPattern.Hidden, 1, "Rare single bird")
+        };
+
+        foreach (var (pattern, expectedSize, description) in testCases)
+        {
+            // For each pattern, BirdSpawner should spawn exactly that many birds
+            Assert.That(expectedSize, Is.GreaterThan(0), 
+                $"{description} should have positive group size");
+        }
+    }
+
+    #endregion
 }

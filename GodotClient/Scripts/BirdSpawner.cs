@@ -1,6 +1,7 @@
 using Godot;
 using FeatherQuest.Core.Services;
 using FeatherQuest.Core.Models;
+using FeatherQuest.Core.Logic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,8 @@ public partial class BirdSpawner : Node
     private IReadOnlyDictionary<string, BirdDefinition> _birdDatabase;
     private Timer _spawnTimer;
     private Random _random;
+    private SpawnRuleEngine _spawnRuleEngine;
+    private WorldContext _worldContext;
     
     // Configurable spawn parameters
     [Export]
@@ -42,6 +45,16 @@ public partial class BirdSpawner : Node
     {
         _random = new Random();
         _birdLoader = new BirdLoader();
+        _spawnRuleEngine = new SpawnRuleEngine();
+        
+        // Initialize default world context (clear morning)
+        _worldContext = new WorldContext
+        {
+            TimeOfDay = TimeOfDay.Morning,
+            Weather = Weather.Clear,
+            Season = Season.Spring
+        };
+        _worldContext.RecalculateFactors();
         
         // Load bird data
         LoadBirdData();
@@ -125,16 +138,57 @@ public partial class BirdSpawner : Node
     /// </summary>
     private void OnSpawnTimerTimeout()
     {
-        SpawnBird();
+        // Evaluate spawn rules based on current world context
+        var spawnModifier = _spawnRuleEngine.EvaluateSpawnRules(_worldContext);
         
-        // Set next spawn interval
-        _spawnTimer.WaitTime = GetRandomSpawnInterval();
+        // Apply spawn pattern - spawn appropriate number of birds
+        SpawnBirdGroup(spawnModifier);
+        
+        // Set next spawn interval adjusted by spawn rate multiplier
+        const float MinSpawnRateMultiplier = 0.2f;
+        var effectiveMultiplier = spawnModifier.SpawnRateMultiplier;
+
+        if (effectiveMultiplier < MinSpawnRateMultiplier)
+        {
+            effectiveMultiplier = MinSpawnRateMultiplier;
+        }
+
+        _spawnTimer.WaitTime = GetRandomSpawnInterval() / effectiveMultiplier;
     }
 
     /// <summary>
-    /// Spawns a bird by selecting a random bird definition and plumage variant.
+    /// Spawns a group of birds based on the spawn modifier pattern.
     /// </summary>
-    private void SpawnBird()
+    /// <param name="modifier">The spawn modifier containing pattern and group size.</param>
+    private void SpawnBirdGroup(SpawnModifier modifier)
+    {
+        if (_birdDatabase == null || _birdDatabase.Count == 0)
+        {
+            GD.PrintErr("Cannot spawn bird: No birds loaded in database");
+            return;
+        }
+
+        // Don't spawn at all if pattern is Hidden and rate is very low
+        if (modifier.Pattern == SpawnPattern.Hidden && _random.NextDouble() > modifier.SpawnRateMultiplier)
+        {
+            GD.Print($"Birds are hiding (Pattern: {modifier.Pattern})");
+            return;
+        }
+
+        // Spawn the appropriate number of birds based on group size
+        for (int i = 0; i < modifier.GroupSize; i++)
+        {
+            SpawnBird(modifier.Pattern, i, modifier.GroupSize);
+        }
+    }
+
+    /// <summary>
+    /// Spawns a single bird by selecting a random bird definition and plumage variant.
+    /// </summary>
+    /// <param name="pattern">The spawn pattern being used.</param>
+    /// <param name="indexInGroup">Index of this bird in its group (0 for solo spawns).</param>
+    /// <param name="groupSize">Total size of the group being spawned.</param>
+    private void SpawnBird(SpawnPattern pattern = SpawnPattern.Solitary, int indexInGroup = 0, int groupSize = 1)
     {
         if (_birdDatabase == null || _birdDatabase.Count == 0)
         {
@@ -158,11 +212,21 @@ public partial class BirdSpawner : Node
             return;
         }
 
-        // Generate random spawn position
+        // Generate random spawn position (with offset for grouped spawns)
         var spawnPosition = GetRandomSpawnPosition();
+        
+        // If spawning in a group, offset positions to cluster them
+        if (groupSize > 1)
+        {
+            float offsetX = (indexInGroup - groupSize / 2.0f) * 50; // 50 pixels apart
+            float offsetY = (float)(_random.NextDouble() * 40 - 20); // Random vertical variance
+            spawnPosition.X += offsetX;
+            spawnPosition.Y += offsetY;
+        }
 
         // Instantiate bird cue (for now, just log - actual scene instantiation will be added later)
-        GD.Print($"Spawning {birdDefinition.CommonName} ({plumageVariant.PlumageType} {plumageVariant.Gender}) at position {spawnPosition}");
+        string patternInfo = groupSize > 1 ? $"[{pattern} {indexInGroup + 1}/{groupSize}]" : $"[{pattern}]";
+        GD.Print($"Spawning {birdDefinition.CommonName} ({plumageVariant.PlumageType} {plumageVariant.Gender}) {patternInfo} at position {spawnPosition}");
         
         // TODO: When BirdCue.tscn is created, instantiate it here
         // var birdCueScene = GD.Load<PackedScene>("res://Scenes/BirdCue.tscn");
@@ -250,5 +314,25 @@ public partial class BirdSpawner : Node
     public void SetBirdDatabase(IReadOnlyDictionary<string, BirdDefinition> birdDatabase)
     {
         _birdDatabase = birdDatabase;
+    }
+
+    /// <summary>
+    /// Gets the current world context.
+    /// </summary>
+    /// <returns>The current world context.</returns>
+    public WorldContext GetWorldContext()
+    {
+        return _worldContext;
+    }
+
+    /// <summary>
+    /// Sets the world context to influence spawn behavior.
+    /// </summary>
+    /// <param name="context">The world context to use.</param>
+    public void SetWorldContext(WorldContext context)
+    {
+        _worldContext = context;
+        _worldContext.RecalculateFactors();
+        GD.Print($"World context updated: {context.TimeOfDay}, {context.Weather}, {context.Season}");
     }
 }
