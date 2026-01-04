@@ -11,7 +11,7 @@ namespace FeatherQuest.GodotClient.Scripts;
 public partial class BinocularView : CanvasLayer
 {
 	// Configuration constants
-	private const float MaxOffsetMultiplier = 2f; // Multiplier for maximum allowed mouse offset
+	private const float MaxOffsetMultiplier = 2f; // Multiplier for maximum allowed input offset
 	
 	// UI Elements (assigned via Godot editor)
 	private Control _birdContainer;
