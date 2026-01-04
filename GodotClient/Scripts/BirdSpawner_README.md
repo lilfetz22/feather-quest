@@ -100,6 +100,42 @@ AddChild(birdCueInstance);
 
 ## Features
 
+### Dynamic Behavioral Spawning (NEW)
+The spawner now adjusts bird behavior based on environmental conditions using the `SpawnRuleEngine`:
+
+#### Weather-Based Behavior
+- **PostRain**: Triggers swarm behavior (5 birds in groups) with 2x spawn rate - robins hunt for worms
+- **HeavyRain**: Birds hide, spawn rate drops to 20%
+- **LightRain**: Reduced spawning (50% rate), waterfowl more active
+- **Fog**: Significantly reduced spawning (40% rate)
+- **Snow**: Limited species availability (60% rate)
+- **Windy**: Birds hunker down (70% rate)
+
+#### Time-Based Behavior
+- **Dawn/Morning**: Peak activity - flocks of 2-3 birds, 1.5x spawn rate
+- **Midday**: Reduced activity - solitary birds, 50% spawn rate
+- **Dusk**: Secondary activity peak - small flocks, 1.3x spawn rate
+- **Night**: Nocturnal birds only - hidden pattern, 30% spawn rate
+
+### Controlling World Context
+You can dynamically change environmental conditions at runtime:
+
+```csharp
+// Get the spawner
+var spawner = GetNode<BirdSpawner>("BirdSpawner");
+
+// Create a post-rain morning scenario (optimal birding!)
+var context = new WorldContext
+{
+    TimeOfDay = TimeOfDay.Morning,
+    Weather = Weather.PostRain,
+    Season = Season.Spring
+};
+spawner.SetWorldContext(context);
+
+// Birds will now spawn in swarms with increased frequency
+```
+
 ### Random Bird Selection
 The spawner randomly selects birds from the loaded database, ensuring variety in spawns.
 
@@ -126,10 +162,59 @@ This design ensures the spawning logic is engine-agnostic and can be migrated to
 
 ## Testing
 
-Unit tests for the BirdSpawner logic are available in `Tests/BirdSpawnerLogicTests.cs`. Run tests with:
+Unit tests for the BirdSpawner logic and spawn rules are available in the Tests directory:
+- `Tests/BirdSpawnerLogicTests.cs` - Core spawner selection and integration tests
+- `Tests/SpawnRuleEngineTests.cs` - Behavioral spawning rules
+
+Run all tests with:
 
 ```bash
+dotnet test
+```
+
+Run specific test suites:
+
+```bash
+# Just spawner tests
 dotnet test --filter "FullyQualifiedName~BirdSpawnerLogicTests"
+
+# Just spawn rule tests
+dotnet test --filter "FullyQualifiedName~SpawnRuleEngineTests"
+```
+
+### Testing Spawn Behaviors in Game
+To verify spawn behaviors are working:
+
+```csharp
+// In a test scene or controller script:
+var spawner = GetNode<BirdSpawner>("BirdSpawner");
+
+// Test 1: PostRain swarm behavior
+var postRain = new WorldContext { 
+    TimeOfDay = TimeOfDay.Morning, 
+    Weather = Weather.PostRain, 
+    Season = Season.Spring 
+};
+spawner.SetWorldContext(postRain);
+// Observe: Should spawn 5 birds at once, twice as frequently
+
+// Test 2: Midday reduced activity
+var midday = new WorldContext { 
+    TimeOfDay = TimeOfDay.Midday, 
+    Weather = Weather.Clear, 
+    Season = Season.Summer 
+};
+spawner.SetWorldContext(midday);
+// Observe: Should spawn single birds half as frequently
+
+// Test 3: Heavy rain hiding
+var heavyRain = new WorldContext { 
+    TimeOfDay = TimeOfDay.Afternoon, 
+    Weather = Weather.HeavyRain, 
+    Season = Season.Fall 
+};
+spawner.SetWorldContext(heavyRain);
+// Observe: Birds should rarely appear
 ```
 
 ## Troubleshooting
