@@ -145,7 +145,15 @@ public partial class BirdSpawner : Node
         SpawnBirdGroup(spawnModifier);
         
         // Set next spawn interval adjusted by spawn rate multiplier
-        _spawnTimer.WaitTime = GetRandomSpawnInterval() / spawnModifier.SpawnRateMultiplier;
+        const float MinSpawnRateMultiplier = 0.2f;
+        var effectiveMultiplier = spawnModifier.SpawnRateMultiplier;
+
+        if (effectiveMultiplier < MinSpawnRateMultiplier)
+        {
+            effectiveMultiplier = MinSpawnRateMultiplier;
+        }
+
+        _spawnTimer.WaitTime = GetRandomSpawnInterval() / effectiveMultiplier;
     }
 
     /// <summary>
