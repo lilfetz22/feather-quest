@@ -98,14 +98,16 @@ public partial class ResponsiveTestController : Node
 	
 	private string GetAspectRatioString(float ratio)
 	{
+		const float tolerance = 0.01f; // Tolerance for aspect ratio matching
+		
 		// Common aspect ratios
-		if (Mathf.Abs(ratio - 16f / 9f) < 0.01f) return "16:9";
-		if (Mathf.Abs(ratio - 9f / 16f) < 0.01f) return "9:16 Portrait";
-		if (Mathf.Abs(ratio - 4f / 3f) < 0.01f) return "4:3";
-		if (Mathf.Abs(ratio - 3f / 4f) < 0.01f) return "3:4 Portrait";
-		if (Mathf.Abs(ratio - 21f / 9f) < 0.01f) return "21:9 Ultrawide";
-		if (Mathf.Abs(ratio - 32f / 9f) < 0.01f) return "32:9 Super Ultrawide";
-		if (Mathf.Abs(ratio - 19.5f / 9f) < 0.1f) return "~19.5:9 (iPhone X)";
+		if (Mathf.Abs(ratio - 16f / 9f) < tolerance) return "16:9";
+		if (Mathf.Abs(ratio - 9f / 16f) < tolerance) return "9:16 Portrait";
+		if (Mathf.Abs(ratio - 4f / 3f) < tolerance) return "4:3";
+		if (Mathf.Abs(ratio - 3f / 4f) < tolerance) return "3:4 Portrait";
+		if (Mathf.Abs(ratio - 21f / 9f) < tolerance) return "21:9 Ultrawide";
+		if (Mathf.Abs(ratio - 32f / 9f) < tolerance) return "32:9 Super Ultrawide";
+		if (Mathf.Abs(ratio - 19.5f / 9f) < tolerance) return "~19.5:9 (iPhone X)";
 		
 		return $"{ratio:F2}:1";
 	}

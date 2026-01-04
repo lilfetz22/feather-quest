@@ -10,6 +10,9 @@ namespace FeatherQuest.GodotClient.Scripts;
 /// </summary>
 public partial class BinocularView : CanvasLayer
 {
+	// Configuration constants
+	private const float MaxOffsetMultiplier = 2f; // Multiplier for maximum allowed mouse offset
+	
 	// UI Elements (assigned via Godot editor)
 	private Control _birdContainer;
 	private TextureRect _birdSprite;
@@ -87,7 +90,7 @@ public partial class BinocularView : CanvasLayer
 			_mouseOffset += inputDelta * MouseSensitivity;
 			
 			// Clamp offset to prevent moving too far
-			float maxOffset = ViewportSize * SwayAmplitude * 2f;
+			float maxOffset = ViewportSize * SwayAmplitude * MaxOffsetMultiplier;
 			_mouseOffset = _mouseOffset.Clamp(
 				new Vector2(-maxOffset, -maxOffset),
 				new Vector2(maxOffset, maxOffset)
