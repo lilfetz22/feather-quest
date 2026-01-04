@@ -131,7 +131,7 @@ void Update() {
 *   **[CORE-002] Bird Database Model & JSON Parser**
     *   **User Story:** As a designer, I want to edit bird stats in a JSON file.
     *   **Implementation:** Create `BirdDefinition` with `Variants` (season/sex) and `Calls` (song/call/alarm with spectrogram path). Write a `BirdLoader` that parses a local JSON file into a `Dictionary<string, BirdDefinition>`.
-    *   **Acceptance:** Unit test passes where `BirdLoader.Get("robin").Variants` returns the correct sprites and `Calls` returns multiple audio entries without Godot running.
+    *   **Acceptance:** Unit test passes where `BirdLoader.Get("f47ac10b-58cc-4372-a567-0e02b2c3d479").Variants` returns the correct sprites and `Calls` returns multiple audio entries without Godot running.
 
 *   **[CORE-003] The Focus Math Engine**
     *   **User Story:** As a player, I want the binoculars to sway.

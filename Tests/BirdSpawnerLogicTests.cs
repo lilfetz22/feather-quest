@@ -17,7 +17,7 @@ public class BirdSpawnerLogicTests
     {
         var robin = new BirdDefinition
         {
-            ID = "robin",
+            ID = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
             CommonName = "American Robin",
             ScientificName = "Turdus migratorius",
             Tier = DifficultyTier.Beginner,
@@ -45,7 +45,7 @@ public class BirdSpawnerLogicTests
 
         var bluebird = new BirdDefinition
         {
-            ID = "bluebird",
+            ID = "8f456e7a-9b12-4321-b9c0-5c8d7e1a3b2f",
             CommonName = "Eastern Bluebird",
             ScientificName = "Sialia sialis",
             Tier = DifficultyTier.Beginner,
@@ -80,8 +80,8 @@ public class BirdSpawnerLogicTests
 
         return new Dictionary<string, BirdDefinition>
         {
-            { "robin", robin },
-            { "bluebird", bluebird }
+            { "f47ac10b-58cc-4372-a567-0e02b2c3d479", robin },
+            { "8f456e7a-9b12-4321-b9c0-5c8d7e1a3b2f", bluebird }
         };
     }
 
@@ -95,7 +95,7 @@ public class BirdSpawnerLogicTests
         
         Assert.That(database, Is.Not.Null);
         Assert.That(database.Count, Is.GreaterThan(0));
-        Assert.That(database.ContainsKey("robin"), Is.True);
+        Assert.That(database.ContainsKey("f47ac10b-58cc-4372-a567-0e02b2c3d479"), Is.True);
     }
 
     [Test]
@@ -104,15 +104,15 @@ public class BirdSpawnerLogicTests
         var database = CreateTestBirdDatabase();
         
         Assert.That(database.Count, Is.EqualTo(2));
-        Assert.That(database.ContainsKey("robin"), Is.True);
-        Assert.That(database.ContainsKey("bluebird"), Is.True);
+        Assert.That(database.ContainsKey("f47ac10b-58cc-4372-a567-0e02b2c3d479"), Is.True);
+        Assert.That(database.ContainsKey("8f456e7a-9b12-4321-b9c0-5c8d7e1a3b2f"), Is.True);
     }
 
     [Test]
     public void BirdDefinition_HasVariants()
     {
         var database = CreateTestBirdDatabase();
-        var robin = database["robin"];
+        var robin = database["f47ac10b-58cc-4372-a567-0e02b2c3d479"];
         
         Assert.That(robin.Variants.Count, Is.EqualTo(1));
         Assert.That(robin.Variants[0].PlumageType, Is.EqualTo(PlumageType.Breeding));
@@ -123,7 +123,7 @@ public class BirdSpawnerLogicTests
     public void BirdDefinition_HasMultipleVariants()
     {
         var database = CreateTestBirdDatabase();
-        var bluebird = database["bluebird"];
+        var bluebird = database["8f456e7a-9b12-4321-b9c0-5c8d7e1a3b2f"];
         
         Assert.That(bluebird.Variants.Count, Is.EqualTo(2));
         Assert.That(bluebird.Variants[0].Gender, Is.EqualTo(Gender.Male));
@@ -134,7 +134,7 @@ public class BirdSpawnerLogicTests
     public void BirdDefinition_HasCalls()
     {
         var database = CreateTestBirdDatabase();
-        var robin = database["robin"];
+        var robin = database["f47ac10b-58cc-4372-a567-0e02b2c3d479"];
         
         Assert.That(robin.Calls.Count, Is.GreaterThan(0));
         Assert.That(robin.Calls[0].Type, Is.EqualTo(CallType.Song));
@@ -158,7 +158,7 @@ public class BirdSpawnerLogicTests
     public void RandomSelection_ProducesValidVariant()
     {
         var database = CreateTestBirdDatabase();
-        var bluebird = database["bluebird"];
+        var bluebird = database["8f456e7a-9b12-4321-b9c0-5c8d7e1a3b2f"];
         var random = new Random(12345); // Fixed seed for reproducibility
         
         var selectedVariant = bluebird.Variants[random.Next(bluebird.Variants.Count)];

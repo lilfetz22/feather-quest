@@ -1,7 +1,7 @@
 {
   "birds": [
     {
-      "id": "robin",
+      "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
       "commonName": "American Robin",
       "scientificName": "Turdus migratorius",
       "tier": "Beginner",
@@ -29,7 +29,7 @@
       ]
     },
     {
-      "id": "bluebird",
+      "id": "8f456e7a-9b12-4321-b9c0-5c8d7e1a3b2f",
       "commonName": "Eastern Bluebird",
       "scientificName": "Sialia sialis",
       "tier": "Beginner",
