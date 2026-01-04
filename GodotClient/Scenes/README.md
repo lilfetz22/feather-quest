@@ -1,4 +1,72 @@
-# Biome Scene - Implementation Documentation
+# Scenes Documentation
+
+## Overview
+This directory contains all Godot scene files (.tscn) for Feather Quest. Each scene is documented below with its purpose and usage.
+
+## Scene Files
+
+### Biome.tscn
+The main exploration scene with scrolling parallax background.
+
+**Purpose**: Forest biome environment where players search for birds
+
+**Features**:
+- Parallax background with 4 layers (sky, distant trees, midground, foreground)
+- Camera controls with mouse drag and touch swipe
+- Horizontal scrolling with bounds
+- Natural scrolling behavior
+
+**Controller**: `Scripts/BiomeCamera.cs`
+
+**Documentation**: See detailed parallax implementation below
+
+---
+
+### BinocularUI.tscn
+The binocular encounter UI scene.
+
+**Purpose**: UI overlay for bird identification encounters (the "Battle" phase)
+
+**Features**:
+- Binocular mask overlay (full screen coverage)
+- Bird sprite with sway mechanics
+- Center reticle for targeting
+- Responsive anchors for all aspect ratios
+- Support for mouse and touch input
+
+**Controller**: `Scripts/BinocularView.cs`
+
+**Documentation**: See `BINOCULAR_SETUP.md` and `BINOCULAR_IMPLEMENTATION.md`
+
+---
+
+### ResponsiveTest.tscn
+Test scene for responsive layout and input testing.
+
+**Purpose**: Manual testing scene for verifying responsive behavior across different screen sizes
+
+**Features**:
+- Includes Biome scene
+- Includes BinocularUI scene
+- Debug overlay showing resolution and aspect ratio
+- Keyboard controls for testing (B, I, F)
+- Real-time viewport information
+
+**Controller**: `Scripts/ResponsiveTestController.cs`
+
+**Documentation**: See `RESPONSIVE_TESTING.md` and `RESPONSIVE_IMPLEMENTATION.md`
+
+**Usage**:
+1. Open scene in Godot
+2. Run with F5
+3. Press 'B' to toggle binocular view
+4. Press 'I' to refresh viewport info
+5. Press 'F' to toggle fullscreen
+6. Resize window to test responsiveness
+
+---
+
+## Biome Scene - Detailed Documentation
 
 ## Overview
 This scene implements a scrolling parallax background for the forest biome environment where players can search for birds.
