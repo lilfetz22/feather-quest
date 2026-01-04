@@ -1,0 +1,13 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Black background (represents the mask) -->
+  <rect width="800" height="600" fill="#000000"/>
+  
+  <!-- Left circle cutout -->
+  <circle cx="280" cy="300" r="180" fill="#FFFFFF"/>
+  
+  <!-- Right circle cutout -->
+  <circle cx="520" cy="300" r="180" fill="#FFFFFF"/>
+  
+  <!-- Bridge between circles (optional darker area) -->
+  <rect x="370" y="200" width="60" height="200" fill="#000000"/>
+</svg>
