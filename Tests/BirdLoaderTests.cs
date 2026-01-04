@@ -12,7 +12,7 @@ public class BirdLoaderTests
         var json = File.ReadAllText("TestData/birds.json");
         var loader = new BirdLoader();
         loader.LoadFromJson(json);
-        var robin = loader.Get("robin");
+        var robin = loader.Get("f47ac10b-58cc-4372-a567-0e02b2c3d479");
         Assert.That(robin, Is.Not.Null);
         Assert.That(robin.CommonName, Is.EqualTo("American Robin"));
         Assert.That(robin.Variants.Count, Is.GreaterThan(0));
@@ -25,9 +25,9 @@ public class BirdLoaderTests
         var json = File.ReadAllText("TestData/birds.json");
         var loader = new BirdLoader();
         loader.LoadFromJson(json);
-        var robin = loader.Get("robin");
+        var robin = loader.Get("f47ac10b-58cc-4372-a567-0e02b2c3d479");
         
-        Assert.That(robin.ID, Is.EqualTo("robin"));
+        Assert.That(robin.ID, Is.EqualTo("f47ac10b-58cc-4372-a567-0e02b2c3d479"));
         Assert.That(robin.CommonName, Is.EqualTo("American Robin"));
         Assert.That(robin.ScientificName, Is.EqualTo("Turdus migratorius"));
         Assert.That(robin.Tier, Is.EqualTo(DifficultyTier.Beginner));
@@ -43,7 +43,7 @@ public class BirdLoaderTests
         var json = File.ReadAllText("TestData/birds.json");
         var loader = new BirdLoader();
         loader.LoadFromJson(json);
-        var robin = loader.Get("robin");
+        var robin = loader.Get("f47ac10b-58cc-4372-a567-0e02b2c3d479");
         
         Assert.That(robin.Variants.Count, Is.EqualTo(1));
         var variant = robin.Variants[0];
@@ -59,7 +59,7 @@ public class BirdLoaderTests
         var json = File.ReadAllText("TestData/birds.json");
         var loader = new BirdLoader();
         loader.LoadFromJson(json);
-        var robin = loader.Get("robin");
+        var robin = loader.Get("f47ac10b-58cc-4372-a567-0e02b2c3d479");
         
         Assert.That(robin.Calls.Count, Is.EqualTo(1));
         var call = robin.Calls[0];
@@ -87,7 +87,7 @@ public class BirdLoaderTests
         
         Assert.That(db, Is.Not.Null);
         Assert.That(db.Count, Is.EqualTo(1));
-        Assert.That(db.ContainsKey("robin"), Is.True);
+        Assert.That(db.ContainsKey("f47ac10b-58cc-4372-a567-0e02b2c3d479"), Is.True);
     }
 
     [Test]
@@ -139,7 +139,7 @@ public class BirdLoaderTests
         var db = loader.LoadFromJson(json);
         
         // Verify we can still get the bird
-        var robin = loader.Get("robin");
+        var robin = loader.Get("f47ac10b-58cc-4372-a567-0e02b2c3d479");
         Assert.That(robin, Is.Not.Null);
         
         // Try to modify the returned dictionary (if it's actually mutable)
@@ -149,7 +149,7 @@ public class BirdLoaderTests
         }
         
         // Internal state should be unaffected - we should still be able to get the bird
-        var robinAfter = loader.Get("robin");
+        var robinAfter = loader.Get("f47ac10b-58cc-4372-a567-0e02b2c3d479");
         Assert.That(robinAfter, Is.Not.Null);
         Assert.That(robinAfter.CommonName, Is.EqualTo("American Robin"));
     }
