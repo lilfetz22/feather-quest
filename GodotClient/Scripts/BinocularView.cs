@@ -66,16 +66,27 @@ public partial class BinocularView : CanvasLayer
 		if (!_isActive)
 			return;
 		
+		Vector2 inputDelta = Vector2.Zero;
+		
+		// Handle mouse motion
 		if (@event is InputEventMouseMotion mouseMotion)
 		{
-			// Track mouse movement relative to the last position
-			Vector2 mouseDelta = mouseMotion.Relative;
+			inputDelta = mouseMotion.Relative;
+		}
+		// Handle touch drag (for mobile/tablet)
+		else if (@event is InputEventScreenDrag touchDrag)
+		{
+			inputDelta = touchDrag.Relative;
+		}
+		
+		// Apply input delta if we have any
+		if (inputDelta != Vector2.Zero)
+		{
+			// Input movement counteracts the sway
+			// Moving input right should move the bird right (counteracting left sway)
+			_mouseOffset += inputDelta * MouseSensitivity;
 			
-			// Mouse movement counteracts the sway
-			// Moving the mouse right should move the bird right (counteracting left sway)
-			_mouseOffset += mouseDelta * MouseSensitivity;
-			
-			// Optionally clamp mouse offset to prevent moving too far
+			// Clamp offset to prevent moving too far
 			float maxOffset = ViewportSize * SwayAmplitude * 2f;
 			_mouseOffset = _mouseOffset.Clamp(
 				new Vector2(-maxOffset, -maxOffset),

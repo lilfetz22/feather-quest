@@ -1,0 +1,34 @@
+[gd_scene load_steps=4 format=3 uid="uid://c8d9e0f1g2h3i"]
+
+[ext_resource type="PackedScene" uid="uid://dlkhvp7y6hg8o" path="res://Scenes/Biome.tscn" id="1_biome"]
+[ext_resource type="Script" path="res://Scripts/ResponsiveTestController.cs" id="2_test_controller"]
+[ext_resource type="PackedScene" uid="uid://bwk7x8y9z0a1b" path="res://Scenes/BinocularUI.tscn" id="3_binocular"]
+
+[node name="ResponsiveTest" type="Node"]
+script = ExtResource("2_test_controller")
+BinocularViewPath = NodePath("BinocularView")
+InfoLabelPath = NodePath("DebugOverlay/InfoLabel")
+
+[node name="Biome" parent="." instance=ExtResource("1_biome")]
+
+[node name="BinocularView" parent="." instance=ExtResource("3_binocular")]
+visible = false
+
+[node name="DebugOverlay" type="CanvasLayer" parent="."]
+layer = 99
+
+[node name="InfoLabel" type="Label" parent="DebugOverlay"]
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 400.0
+offset_bottom = 150.0
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 14
+text = "Responsive Layout Test
+Resolution: Loading...
+Aspect Ratio: Loading...
+Press 'B' to toggle Binocular View
+Press 'I' to refresh info"

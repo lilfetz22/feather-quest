@@ -1,0 +1,85 @@
+[gd_scene load_steps=5 format=3 uid="uid://bwk7x8y9z0a1b"]
+
+[ext_resource type="Script" path="res://Scripts/BinocularView.cs" id="1_binocular_view"]
+[ext_resource type="Texture2D" uid="uid://placeholder_mask" path="res://Assets/Textures/binocular_mask.svg" id="2_binocular_mask"]
+[ext_resource type="Texture2D" uid="uid://placeholder_bird" path="res://Assets/Textures/placeholder_bird.svg" id="3_bird"]
+[ext_resource type="Texture2D" uid="uid://placeholder_reticle" path="res://Assets/Textures/reticle.svg" id="4_reticle"]
+
+[node name="BinocularView" type="CanvasLayer"]
+layer = 100
+script = ExtResource("1_binocular_view")
+Stability = 0.5
+SwayAmplitude = 0.2
+MouseSensitivity = 1.0
+ViewportSize = 400.0
+
+[node name="BinocularMask" type="TextureRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_binocular_mask")
+stretch_mode = 1
+
+[node name="BirdContainer" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -200.0
+offset_right = 200.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BirdSprite" type="TextureRect" parent="BirdContainer"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 100.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_bird")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Reticle" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -50.0
+offset_right = 50.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ReticleSprite" type="TextureRect" parent="Reticle"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -50.0
+offset_right = 50.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_reticle")
+expand_mode = 1
+stretch_mode = 5
