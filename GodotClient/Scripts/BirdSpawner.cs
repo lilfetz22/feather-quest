@@ -1,6 +1,7 @@
 using Godot;
 using FeatherQuest.Core.Services;
 using FeatherQuest.Core.Models;
+using FeatherQuest.Core.Logic;
 using System;
 using System.Collections.Generic;
 using System.Linq;

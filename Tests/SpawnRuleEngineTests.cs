@@ -1,4 +1,5 @@
 using FeatherQuest.Core.Models;
+using FeatherQuest.Core.Logic;
 using System;
 
 namespace FeatherQuest.Tests;

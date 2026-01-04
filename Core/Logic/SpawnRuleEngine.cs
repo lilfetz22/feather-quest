@@ -1,6 +1,8 @@
 using System;
 
-namespace FeatherQuest.Core.Models;
+namespace FeatherQuest.Core.Logic;
+
+using FeatherQuest.Core.Models;
 
 /// <summary>
 /// Evaluates WorldContext to determine spawn behavior modifications.
